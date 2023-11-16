@@ -1,10 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Navbar from './components/navbar';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Text style={styles.Text} >Ogólnie to chwilowo się</Text>
+      <Text>Możemy teoretycznie też w ten sposób pracować</Text>
+      <Navbar></Navbar>
       <StatusBar style="auto" />
     </View>
   );
@@ -13,8 +16,15 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    backgroundColor: '#081526',
+    color: '#fff',
     justifyContent: 'center',
+    alignItems: 'center',
   },
+  Text: {
+    color: '#fff'
+  }
 });
+
+
+
