@@ -5,25 +5,27 @@ import Navbar from './components/navbar';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.Text} >Ogólnie to chwilowo się</Text>
-      <Text>Możemy teoretycznie też w ten sposób pracować</Text>
-      <Navbar></Navbar>
-      <StatusBar style="auto" />
+      <StatusBar style="auto"/>
+      <Navbar style={styles.Navbar}></Navbar>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, // regóła określająca, że to element nadrzędny
     backgroundColor: '#081526',
     color: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
-  Text: {
-    color: '#fff'
+  Navbar: {
+    
+    backgroundColor: '#fff',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+
   }
+  
 });
 
 
