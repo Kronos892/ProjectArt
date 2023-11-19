@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, FlatList, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, ActivityIndicator, Image  } from 'react-native';
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function MainScreen({ navigation }) {
     const [content, setContent] = useState([]);
@@ -37,9 +38,11 @@ export default function MainScreen({ navigation }) {
             keyExtractor={(item, index) => `${item.id}-${index}`}
             renderItem={({ item }) => (
                 <View key={item.index} style={styles.View}>
-                    <Text style={styles.Text}>{item.title}</Text>
-                    <Text style={styles.Text}>{item.artist_title ? item.artist_title : 'Artist unknown'}</Text>
-                    
+                    <View style={styles.View}>
+                        <Text style={styles.Text}>{"Title: \n"}{item.title}</Text>
+                        <Text style={styles.Text}>{"Artist: \n"}{item.artist_title ? item.artist_title : 'Artist unknown'}</Text>
+                        <Ionicons style={styles.Ionicons} name={'heart-outline'} size={25} color={'#fff'} />
+                    </View>
                 </View>
             )}
             onEndReached={handleLoadMore}
@@ -54,18 +57,32 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#081526',
         paddingTop: 10,
+        
     },
     View: {
-        height: 80,
+        flex: 1,
         padding: 8,
         margin: 7,
         border: 3,
         backgroundColor: '#0D1D32',
+        borderRadius: 12,
+        flexDirection: 'row',
+        width: "auto",
+        justifyContent: "center"
         
-        
-
     },
     Text: {
+        flex: 6,
         color: '#fff',
+        textAlign: 'center',
+        justifyContent: "center"
     },
+    Ionicons: {
+        flex: 1,
+        alignItems: 'flex-end',
+        justifyContent: "center"
+        
+        
+    }
+    
 });
