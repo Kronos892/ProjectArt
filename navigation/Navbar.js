@@ -9,6 +9,7 @@ import MainScreen from "./screens/main-screen";
 import FavouriteScreen from "./screens/favourite-screen";
 import SearchScreen from "./screens/search-screen";
 import ViewScreen from './screens/view-screen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Screen Names
 export const SCREEN_NAMES = {
@@ -22,69 +23,73 @@ const Tab = createBottomTabNavigator();
 
 function Navbar() {
     return (
-        <NavigationContainer>
-            <Tab.Navigator
-                initialRouteName={SCREEN_NAMES.HOME}
-                screenOptions={{
-                    headerTitleAlign: 'center',
-                    headerStyle: {
-                        backgroundColor: '#081526',    
-                    },
-                    headerTitleStyle: {
-                        paddingTop: 10,
-                        paddingBottom: 5,
+        <GestureHandlerRootView style={{flex: 1,}}>
+            <NavigationContainer>
+                <Tab.Navigator
+                    initialRouteName={SCREEN_NAMES.HOME}
+                    screenOptions={{
+                        headerTitleAlign: 'center',
+                        headerStyle: {
+                            backgroundColor: '#081526',    
+                        },
+                        headerTitleStyle: {
+                            paddingTop: 10,
+                            paddingBottom: 5,
+                            
+                        },
+                        headerTintColor: '#ffffff',
+                        tabBarStyle: {
+                            backgroundColor: '#040911' ,
+                            padding: 5,
+                            height: 60,
+                            paddingBottom: 6,
+                        },
+                        tabBarActiveTintColor: '#ffffff',
+                        tabBarInactiveTintColor: '#fff',
                         
-                    },
-                    headerTintColor: '#ffffff',
-                    tabBarStyle: {
-                        backgroundColor: '#040911' ,
-                        padding: 5,
-                        height: 60,
-                        paddingBottom: 6,
-                    },
-                    tabBarActiveTintColor: '#ffffff',
-                    tabBarInactiveTintColor: '#fff',
+                    }}
+                >   
                     
-                }}
-            >   
-                
-                <Tab.Screen
+                    <Tab.Screen
+                        
+                        name = {SCREEN_NAMES.HOME}
+                        component = {MainScreen}
+                        options = {{
+                            headerTitle: 'All List',
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />
+                            ),
+                        }}
+                    />
+                    <Tab.Screen
                     
-                    name = {SCREEN_NAMES.HOME}
-                    component = {MainScreen}
-                    options = {{
-                        headerTitle: 'All List',
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                
-                    name={SCREEN_NAMES.SEARCH}
-                    component={SearchScreen}
-                    options={{
-                        headerTitle: 'Search',
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <Ionicons name={focused ? 'search' : 'search-outline'} size={size} color={color} />
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name={SCREEN_NAMES.FAV}
-                    component={FavouriteScreen}
-                    options={{
-                        headerTitle: 'Favourite List',
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <Ionicons name={focused ? 'heart' : 'heart-outline'} size={size} color={color} />
-                        ),
-                    }}
-                />
-                
+                        name={SCREEN_NAMES.SEARCH}
+                        component={SearchScreen}
+                        options={{
+                            headerTitle: 'Search',
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <Ionicons name={focused ? 'search' : 'search-outline'} size={size} color={color} />
+                            ),
+                        }}
+                    />
+                    <Tab.Screen
+                        name={SCREEN_NAMES.FAV}
+                        component={FavouriteScreen}
+                        options={{
+                            headerTitle: 'Favourite List',
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <Ionicons name={focused ? 'heart' : 'heart-outline'} size={size} color={color} />
+                            ),
+                        }}
+                    />
+                    
 
-            </Tab.Navigator>
-        </NavigationContainer>
+                </Tab.Navigator>
+            </NavigationContainer>
+        </GestureHandlerRootView>
     );
 }
 
 export default Navbar;
+
+
