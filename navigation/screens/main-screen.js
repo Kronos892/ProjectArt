@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, FlatList, ActivityIndicator, Image  } from 'react-native';
+import { StyleSheet, Text, View, FlatList, ActivityIndicator, Image, TouchableOpacity  } from 'react-native';
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -31,19 +31,25 @@ export default function MainScreen({ navigation }) {
         }
     };
 
+    const handleItemPress = (id) => {
+        // Przekierowanie do ekranu szczegółów i przekazanie id
+        navigation.navigate('View', { itemId: id });
+        //onPress={() => navigation.navigate('All')}
+    };
+
     return (
         <FlatList
             style={styles.container}
             data={content}
             keyExtractor={(item, index) => `${item.id}-${index}`}
             renderItem={({ item }) => (
-                <View key={item.index} style={styles.View}>
+                <TouchableOpacity style={styles.TouchableOpacity} onPress={() => handleItemPress(item.id)}>
                     <View style={styles.View}>
                         <Text style={styles.Text}>{"Title: \n"}{item.title}</Text>
                         <Text style={styles.Text}>{"Artist: \n"}{item.artist_title ? item.artist_title : 'Artist unknown'}</Text>
-                        <Ionicons style={styles.Ionicons} name={'heart-outline'} size={25} color={'#fff'} />
+                        <Ionicons style={styles.ionicons} name={'heart-outline'} size={25} color={'#fff'} />
                     </View>
-                </View>
+                </TouchableOpacity>
             )}
             onEndReached={handleLoadMore}
             onEndReachedThreshold={0.1}
@@ -67,7 +73,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#0D1D32',
         borderRadius: 12,
         flexDirection: 'row',
-
+        paddingVertical: 20,
         justifyContent: "center"
         
     },
@@ -83,6 +89,9 @@ const styles = StyleSheet.create({
         justifyContent: "center"
         
         
+    },
+    TouchableOpacity: {
+        flex: 1,
     }
     
 });

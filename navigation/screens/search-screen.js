@@ -1,21 +1,39 @@
 import React, { useState, useEffect, PureComponent } from "react";
-import { StyleSheet, Text, View, TextInput, Button, FlatList, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, FlatList, ActivityIndicator, TouchableOpacity, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
+const isFavorite = (itemId, favoritesArray) => {
+    return favoritesArray && favoritesArray.includes(itemId);
+};
 
 class Item extends PureComponent {
     render() {
-        const { item } = this.props;
+        const { item, onAddToFavorites, navigation } = this.props;
+
+        const handlePress = () => {
+            navigation.navigate('View', { itemId: item.id });
+        };
+
+        const handleFavoritePress = () => {
+            onAddToFavorites(item.id);
+        };
+
         return (
-            <View style={styles.view}>
-                <View style={styles.innerView}>
-                    <Text style={styles.text}>{"Title: \n"}{item.title}</Text>
-                    <Text style={styles.text}>{"Artist: \n"}{item.artist_title ? item.artist_title : 'Artist unknown'}</Text>
-                    <Ionicons style={styles.ionicons} name={'heart-outline'} size={25} color={'#fff'} />
+            <TouchableOpacity onPress={handlePress}>
+                <View style={styles.view}>
+                    <View style={styles.innerView}>
+                        <Text style={styles.text}>{"Title: \n"}{item.title}</Text>
+                        <Text style={styles.text}>{"Artist: \n"}{item.artist_title ? item.artist_title : 'Artist unknown'}</Text>
+                        <Ionicons style={styles.ionicons} name={isFavorite(item.id) ? 'heart' : 'heart-outline'} size={25} color={'#fff'} onPress={handleFavoritePress} />
+                    </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 }
+
 
 export default function SearchScreen({ navigation }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -23,6 +41,7 @@ export default function SearchScreen({ navigation }) {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalResults, setTotalResults] = useState(0);
+    const [favoritesArray, setFavoritesArray] = useState([]);
 
     useEffect(() => {
         fetchData();
@@ -55,6 +74,32 @@ export default function SearchScreen({ navigation }) {
         }
     };
 
+    const handleAddToFavorites = (itemId) => {
+        // Pobierz istniejące ulubione elementy z AsyncStorage
+        AsyncStorage.getItem('favorites').then((favorites) => {
+            let updatedFavoritesArray = [];
+
+            if (favorites) {
+                // Jeśli są już ulubione elementy, przekonwertuj z JSON
+                updatedFavoritesArray = JSON.parse(favorites);
+            }
+
+            // Sprawdź, czy element już istnieje w ulubionych
+            const isAlreadyFavorite = updatedFavoritesArray.some((favorite) => favorite === itemId);
+
+            if (!isAlreadyFavorite) {
+                // Jeśli nie jest już ulubiony, dodaj go do listy
+                updatedFavoritesArray.push(itemId);
+
+                // Zapisz zaktualizowane ulubione elementy w AsyncStorage
+                AsyncStorage.setItem('favorites', JSON.stringify(updatedFavoritesArray));
+
+                // Zaktualizuj lokalny stan
+                setFavoritesArray(updatedFavoritesArray);
+            }
+        });
+    };
+
     return (
         <View style={styles.container}>
             <TextInput
@@ -69,13 +114,24 @@ export default function SearchScreen({ navigation }) {
                 style={styles.flatList}
                 data={content}
                 keyExtractor={(item, index) => `${item.id}-${index}`}
-                renderItem={({ item }) => <Item item={item} />}
+                renderItem={({ item }) => (
+                    <Item
+                        item={item}
+                        onAddToFavorites={handleAddToFavorites}
+                        onNavigateToView={handleNavigateToView}
+                        navigation={navigation}
+                    />
+                )}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.1}
                 ListFooterComponent={() => loading && <ActivityIndicator />}
             />
         </View>
     );
+    const handleNavigateToView = (itemId) => {
+        navigation.navigate('View', { itemId });
+    };
+    
 }
 
 const styles = StyleSheet.create({
@@ -121,7 +177,5 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'flex-end',
         justifyContent: "center"
-        
-        
     }
 });
